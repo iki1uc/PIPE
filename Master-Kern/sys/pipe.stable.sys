@@ -1,4 +1,6 @@
 PIPE-STABILITY (((WIEIMMER)))
+ID = PIPE-STABLE-SYS
+instance = iki1uc
 
 Δ = { RESPO, GHOST, CACHE, TMP }
 ∫ = IKI1UC
