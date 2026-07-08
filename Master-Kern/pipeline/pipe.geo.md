@@ -1,0 +1,3 @@
+IKI1UC = Δ(RESPO, GHOST, CACHE, TMP)
+
+PIPE = ∫ IKI1UC dx
