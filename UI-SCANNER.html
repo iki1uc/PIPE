@@ -1,5 +1,19 @@
-<body id="UI-SCANNER"
-      data-iki="phase:omelett; einstieg:ui; inhalt:scanner; start:start2;">
-  UI-SCANNER – Scanoberfläche aktiv
-</body>
+<html>
+<head>
+<title>MASTER-SCANNER (((WIEIMMER)))</title>
+</head>
+<body>
 
+<section id="scanner">
+ID = MASTER-SCANNER
+instance = iki1uc
+
+pipeline = P4 → P0 → P1 → P2 → Pe
+
+execute = PIPE.execute({{INPUT}})
+output = {{RESULT}}
+
+</section>
+
+</body>
+</html>
