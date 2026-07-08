@@ -1,5 +1,8 @@
 class PIPE {
     constructor() {
+        this.ID = "PIPE-CLASS";
+        this.instance = "iki1uc";
+
         this.respo = 0.42;
         this.ghost = 0.27;
         this.cache = 0.19;
