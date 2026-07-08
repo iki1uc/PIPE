@@ -1,4 +1,6 @@
-PIPE.bind = {
+const PIPE_BIND = {
+    ID: "PIPE-BIND",
+    instance: "iki1uc",
     respo: RESPO,
     ghost: GHOST,
     cache: CACHE,
