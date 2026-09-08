@@ -1,31 +1,122 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>4u – Response Layer</title>
-
-<style>
-body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
-pre{background:#111;padding:20px;border:1px solid #333;}
-button{background:#111;color:#0f0;border:1px solid #333;padding:8px 16px;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ MASTER‑RUNTIME · iki1uc · 3‑9‑81</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Minimal‑Styling – nur für den Master‑Status */
+    body {
+      margin: 0;
+      background: #0a0a12;
+      color: #b7c9e2;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+    }
+    #mesh { width: 100%; height: 60vh; background: #1e242c; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2f3542; }
+    #stats { display: flex; gap: 30px; margin-bottom: 15px; flex-wrap: wrap; }
+    #stats span { color: #7bed9f; font-weight: bold; }
+    #controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 15px; }
+    #controls input { background: #1e242c; border: 1px solid #2f3542; color: #fff; padding: 8px 12px; border-radius: 4px; flex: 1; min-width: 200px; }
+    #controls button { background: #2f3542; border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    #controls button:hover { background: #4a5162; }
+    #log { background: #1e242c; padding: 10px; border-radius: 4px; height: 100px; overflow-y: auto; font-size: 0.85rem; border: 1px solid #2f3542; }
+    .master-badge {
+      background: #ffd700;
+      color: #000;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 12px;
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>4u – Response Layer</h1>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+    <h1 style="color:#ffd700; font-size:1.2rem;">
+      ⚡ MASTER‑RUNTIME 
+      <span class="master-badge">sli.ready ● aktiv</span>
+    </h1>
+    <span id="master-status" style="color:#7bed9f;">🌀 Zentral · eine Runtime</span>
+  </div>
 
-<button onclick="show()">RESPO</button>
+  <!-- ===== KERN‑UI ===== -->
+  <div id="mesh"></div>
 
-<pre id="out">Bereit...</pre>
+  <div id="stats">
+    <div>SCORE: <span id="score">0</span></div>
+    <div>TICK: <span id="tick">0</span></div>
+    <div>GEAR: <span id="gear">0</span></div>
+    <div>PLUGINS: <span id="plugins">0</span></div>
+  </div>
 
-<script type="module">
-import { respo } from "./respo.js";
+  <div id="controls">
+    <input id="attackInput" placeholder="SHOCK / WAVE / LINK ...">
+    <button onclick="sendAttack()">SENDEN</button>
+    <button onclick="pauseLoop()">PAUSE</button>
+    <button onclick="stepLoop()">SCHRITT</button>
+    <button onclick="resetMesh()">RESET</button>
+  </div>
 
-function show(){
-  out.textContent = JSON.stringify(respo, null, 2);
-}
-</script>
+  <div id="log">▶ iki1uc · Master‑Runtime initialisiert · sli.ready aktiv</div>
+
+  <!-- ===== DREI ACHSEN LADEN (Reihenfolge: 3 → 9 → 81) ===== -->
+  <script src="3.js"></script>   <!-- Welt -->
+  <script src="9.js"></script>   <!-- Kraft -->
+  <script src="81.js"></script>  <!-- Leben -->
+
+  <!-- ===== MASTER‑BOOT ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ---- Prüfe, ob sli.ready existiert (zur Info) ----
+      // Da wir im Dateisystem sind, nutzen wir einfach einen Marker.
+      // Du kannst auch eine leere Datei 'sli.ready' im selben Ordner anlegen.
+      const sliReady = true; // ← Setze dies auf false, um Multi‑Runtime zu aktivieren
+      document.getElementById('master-status').textContent = sliReady ? '🌀 Zentral · eine Runtime' : '🌐 Verteilte Runtime';
+
+      // ---- Fallback‑Hooks ----
+      window.sendAttack = function() {
+        const input = document.getElementById('attackInput');
+        if (input && typeof processZEN === 'function') {
+          processZEN(input.value);
+          input.value = '';
+        } else if (input && typeof window.dispatchAttack === 'function') {
+          window.dispatchAttack(input.value);
+          input.value = '';
+        } else {
+          document.getElementById('log').innerHTML += `<br>⚠️ Keine Attack‑Engine gefunden.`;
+        }
+      };
+      window.pauseLoop = function() { if (typeof togglePause === 'function') togglePause(); };
+      window.stepLoop = function() { if (typeof stepTick === 'function') stepTick(); };
+      window.resetMesh = function() { if (typeof resetGrid === 'function') resetGrid(); };
+
+      // ---- Startsequenz ----
+      try {
+        if (typeof initMesh === 'function') initMesh();
+        if (typeof initUI === 'function') initUI();
+        if (typeof initZEN === 'function') initZEN();
+        if (typeof startLoop === 'function') startLoop();
+        document.getElementById('log').innerHTML += `<br>▶ Alle drei Achsen aktiv · Tick‑Loop läuft.`;
+      } catch (e) {
+        document.getElementById('log').innerHTML += `<br>❌ Boot‑Fehler: ${e.message}`;
+        console.error(e);
+      }
+
+      // ---- Aktualisiere Stats (falls die Engines sie nicht selbst tun) ----
+      setInterval(() => {
+        // Wenn die Engines globale Variablen setzen, könntest du sie hier auslesen.
+        // Beispiel: document.getElementById('tick').textContent = window.MESH?.tick || 0;
+      }, 500);
+
+    })();
+  </script>
 
 </body>
 </html>
